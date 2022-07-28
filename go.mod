@@ -5,7 +5,6 @@ go 1.18
 require (
 	github.com/georgysavva/scany v1.0.0
 	github.com/go-chi/chi v1.5.4
-	github.com/go-sql-driver/mysql v1.6.0
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/joho/godotenv v1.4.0
 	github.com/justinas/nosurf v1.1.1
