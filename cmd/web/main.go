@@ -4,50 +4,65 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
+	"os"
 
-	"github.com/alexedwards/scs/v2"
-	"github.com/guicattani/go-course/pkg/config"
-	"github.com/guicattani/go-course/pkg/handlers"
-	"github.com/guicattani/go-course/pkg/render"
+	"github.com/guicattani/handy-folk-finder/internal/config"
+	"github.com/guicattani/handy-folk-finder/internal/driver"
+	"github.com/guicattani/handy-folk-finder/internal/handlers"
+	"github.com/guicattani/handy-folk-finder/internal/helpers"
+	"github.com/joho/godotenv"
 )
 
 var ac config.AppConfig
-var session *scs.SessionManager
+
+var infoLog *log.Logger
+var errorLog *log.Logger
 
 func main() {
-
-	ac.InProduction = false
-
-	session = scs.New()
-	session.Lifetime = 24 * time.Hour
-	session.Cookie.Persist = true
-	session.Cookie.SameSite = http.SameSiteLaxMode
-	session.Cookie.Secure = ac.InProduction
-
-	ac.Session = session
-
-	tc, err := render.CreateTemplateCache()
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("cannot create template cache")
+		log.Fatal("Error loading .env file")
 	}
 
-	ac.TemplateCache = tc
+	db, err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.SQL.Close()
 
-	repo := handlers.NewRepo(&ac)
-	handlers.NewHandlers(repo)
-
-	render.NewTemplates(&ac)
-
-	http.HandleFunc("/", handlers.Repo.Home)
-
-	fmt.Println("Listening on port 8080")
+	fmt.Printf("Staring application on port :%s \n", os.Getenv("PORT_NUMBER"))
 
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%s", os.Getenv("PORT_NUMBER")),
 		Handler: routes(&ac),
 	}
 
 	err = srv.ListenAndServe()
-	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() (*driver.DB, error) {
+	// change this to true when in production
+	ac.InProduction = false
+
+	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	ac.InfoLog = infoLog
+
+	errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	ac.ErrorLog = errorLog
+
+	// connect to database
+	log.Println("Connecting to database...")
+	db, err := driver.ConnectSQL(helpers.DbConfig())
+	if err != nil {
+		log.Fatal("Cannot connect to database! Dying...")
+	}
+
+	repo := handlers.NewRepo(&ac, db)
+	handlers.NewHandlers(repo)
+	helpers.NewHelpers(&ac)
+
+	return db, nil
 }

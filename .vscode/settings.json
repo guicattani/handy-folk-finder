@@ -3,10 +3,18 @@
     "alexedwards",
     "bmizerany",
     "CSFR",
+    "dbname",
+    "dbrepo",
+    "godotenv",
     "gohtml",
     "guicattani",
+    "handyfolkfinder",
+    "jackc",
+    "joho",
     "justinas",
     "nosurf",
+    "pgconn",
+    "stdlib",
     "tmpl"
   ]
 }
