@@ -78,11 +78,11 @@ func (m *postgresDBRepo) CustomerLogin(email string, password string) (models.Cu
 	return customer, err
 }
 
-func (m *postgresDBRepo) ClosestPartner(customer models.Customer, needed_experience string) ([]models.Partner, error) {
+func (m *postgresDBRepo) ClosestPartner(customer models.Customer, neededExperience string) ([]models.Partner, error) {
 	var partners []models.Partner
 
 	//Spherical Law of Cosines https://www.movable-type.co.uk/scripts/latlong.html#cosine-law
-	earth_radius := 6371.0
+	earthRadius := 6371.0
 	stmt := fmt.Sprintf(`
 		SELECT id,
 					first_name,
@@ -117,7 +117,7 @@ func (m *postgresDBRepo) ClosestPartner(customer models.Customer, needed_experie
 			) AS partners_subquery
 			WHERE distance <= partners_subquery.operating_radius
 			AND partners_subquery.experience  @> '{%s}'
-			`, customer.AddressLat, customer.AddressLat, customer.AddressLon, earth_radius, needed_experience)
+			`, customer.AddressLat, customer.AddressLat, customer.AddressLon, earthRadius, neededExperience)
 
 	rows, err := m.DB.Query(context.Background(), stmt)
 	if err != nil {

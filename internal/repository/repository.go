@@ -6,5 +6,5 @@ type DatabaseRepo interface {
 	AllPartners() ([]models.Partner, error)
 	SpecificPartner(id int) (models.Partner, error)
 	CustomerLogin(email string, password string) (models.Customer, error)
-	ClosestPartner(customer models.Customer, needed_experience string) ([]models.Partner, error)
+	ClosestPartner(customer models.Customer, neededExperience string) ([]models.Partner, error)
 }
