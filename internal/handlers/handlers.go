@@ -33,6 +33,19 @@ func NewHandlers(r *Repository) {
 }
 
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Hello there!"
+	partners, err := m.DB.AllPartners()
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	out, err := json.MarshalIndent(partners, "", "     ")
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(out)
 }

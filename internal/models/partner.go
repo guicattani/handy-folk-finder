@@ -8,11 +8,11 @@ type Partner struct {
 	FirstName       string
 	LastName        string
 	Email           string
-	AddressLat      int
-	AddressLon      int
+	AddressLat      float32
+	AddressLon      float32
 	OperatingRadius int
 	Rating          int
-	AccessLevel     int
+	Experience      []string
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }

@@ -1,5 +1,7 @@
 package repository
 
+import "github.com/guicattani/handy-folk-finder/internal/models"
+
 type DatabaseRepo interface {
-	AllUsers() bool
+	AllPartners() ([]models.Partner, error)
 }
