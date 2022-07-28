@@ -82,3 +82,33 @@ func (m *Repository) SpecificPartner(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
+func (m *Repository) ClosestPartner(w http.ResponseWriter, r *http.Request) {
+	keys := r.URL.Query()
+
+	if len(keys) < 3 || keys["email"] == nil || keys["password"] == nil || keys["needed_experience"] == nil {
+		helpers.ClientError(w, http.StatusUnprocessableEntity, "missing parameters, must have email, login, needed_experience")
+		return
+	}
+
+	customer, err := m.DB.CustomerLogin(keys["email"][0], keys["password"][0])
+	if err != nil {
+		helpers.ClientError(w, http.StatusNotFound, "customer not found")
+		return
+	}
+
+	partners, err := m.DB.ClosestPartner(customer, keys["needed_experience"][0])
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	out, err := json.MarshalIndent(partners, "", "     ")
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(out)
+}

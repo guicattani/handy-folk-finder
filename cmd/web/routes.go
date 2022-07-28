@@ -17,6 +17,7 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/", handlers.Repo.AllPartners)
 	mux.Get("/partner", handlers.Repo.SpecificPartner)
+	mux.Get("/closest_partner", handlers.Repo.ClosestPartner)
 
 	return mux
 }
