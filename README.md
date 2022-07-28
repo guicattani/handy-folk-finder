@@ -4,6 +4,8 @@ This project uses
 - Pop (from the Buffalo package) -> creation of migrations
 - NoSurf -> CSRF Middleware
 - Chi -> Router
+- PGX -> Postgres Driver
+- Scany -> Better PGX scan
 
 Server run instructions:
 - Rename .env.example to .env

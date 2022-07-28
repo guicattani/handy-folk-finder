@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/guicattani/handy-folk-finder/internal/config"
 	"github.com/guicattani/handy-folk-finder/internal/driver"
+	"github.com/guicattani/handy-folk-finder/internal/helpers"
 	"github.com/guicattani/handy-folk-finder/internal/repository"
 	"github.com/guicattani/handy-folk-finder/internal/repository/dbrepo"
 )
@@ -19,10 +21,10 @@ type Repository struct {
 }
 
 // NewRepo creates a new repository
-func NewRepo(a *config.AppConfig, db *driver.DB) *Repository {
+func NewRepo(ac *config.AppConfig, db *driver.DB) *Repository {
 	return &Repository{
-		App: a,
-		DB:  dbrepo.NewPostgresRepo(db.SQL, a),
+		App: ac,
+		DB:  dbrepo.NewPostgresRepo(db.Connection, ac),
 	}
 }
 

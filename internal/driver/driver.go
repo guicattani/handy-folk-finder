@@ -1,20 +1,16 @@
 package driver
 
 import (
-	"database/sql"
+	"context"
 	"time"
 
-	_ "github.com/jackc/pgconn"
-	_ "github.com/jackc/pgx/v4"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 // DB holds the database connection pool
 type DB struct {
-	SQL *sql.DB
+	Connection *pgxpool.Pool
 }
-
-var dbConn = &DB{}
 
 const maxOpenDbConn = 10
 const maxIdleDbConn = 5
@@ -22,41 +18,28 @@ const maxDbLifetime = 5 * time.Minute
 
 // ConnectSQL creates database pool for Postgres
 func ConnectSQL(dsn string) (*DB, error) {
-	d, err := NewDatabase(dsn)
+	d, err := OpenDatabase(dsn)
 	if err != nil {
 		panic(err)
 	}
 
-	d.SetMaxOpenConns(maxOpenDbConn)
-	d.SetMaxIdleConns(maxIdleDbConn)
-	d.SetConnMaxLifetime(maxDbLifetime)
+	d.Config().MaxConns = maxOpenDbConn
+	d.Config().MaxConnIdleTime = maxIdleDbConn
+	d.Config().MaxConnLifetime = maxDbLifetime
 
-	dbConn.SQL = d
+	dbConn := &DB{Connection: d}
 
-	err = testDB(d)
+	err = d.Ping(context.Background())
 	if err != nil {
 		return nil, err
 	}
 	return dbConn, nil
 }
 
-// testDB tries to ping the database
-func testDB(d *sql.DB) error {
-	err := d.Ping()
+// OpenDatabase opens the database for the application
+func OpenDatabase(dsn string) (*pgxpool.Pool, error) {
+	db, err := pgxpool.Connect(context.Background(), dsn)
 	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewDatabase creates a new database for the application
-func NewDatabase(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("pgx", dsn)
-	if err != nil {
-		return nil, err
-	}
-
-	if err = db.Ping(); err != nil {
 		return nil, err
 	}
 

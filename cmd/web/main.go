@@ -28,7 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.SQL.Close()
+	defer db.Connection.Close()
 
 	fmt.Printf("Staring application on port :%s \n", os.Getenv("PORT_NUMBER"))
 
