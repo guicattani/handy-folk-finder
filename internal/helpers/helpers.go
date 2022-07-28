@@ -29,9 +29,9 @@ func ServerError(w http.ResponseWriter, err error) {
 
 func DbConfig() string {
 	return fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s",
-		os.Getenv("DEVELOPMENT_DB_HOST"),
-		os.Getenv("DEVELOPMENT_DB_PORT"),
-		os.Getenv("DEVELOPMENT_DB"),
-		os.Getenv("DEVELOPMENT_DB_USERNAME"),
-		os.Getenv("DEVELOPMENT_DB_PASSWORD"))
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_USERNAME"),
+		os.Getenv("DB_PASSWORD"))
 }
