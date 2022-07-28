@@ -9,6 +9,7 @@ import (
 	"github.com/guicattani/handy-folk-finder/internal/models"
 )
 
+// AllPartners returns all partners data
 func (m *postgresDBRepo) AllPartners() ([]models.Partner, error) {
 	var partners []models.Partner
 
@@ -33,6 +34,7 @@ func (m *postgresDBRepo) AllPartners() ([]models.Partner, error) {
 	return partners, err
 }
 
+// SpecificPartner returns data from the specified partner
 func (m *postgresDBRepo) SpecificPartner(id int) (models.Partner, error) {
 	var partner models.Partner
 
@@ -59,6 +61,7 @@ func (m *postgresDBRepo) SpecificPartner(id int) (models.Partner, error) {
 	return partner, err
 }
 
+// CustomerLogin mocks 'login' by the customer with given email and passwords
 func (m *postgresDBRepo) CustomerLogin(email string, password string) (models.Customer, error) {
 	var customer models.Customer
 
@@ -78,6 +81,7 @@ func (m *postgresDBRepo) CustomerLogin(email string, password string) (models.Cu
 	return customer, err
 }
 
+// ClosestPartner returns the closest partners for given customer, considering needed experience, returns lists of partners
 func (m *postgresDBRepo) ClosestPartner(customer models.Customer, neededExperience string) ([]models.Partner, error) {
 	var partners []models.Partner
 

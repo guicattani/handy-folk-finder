@@ -29,10 +29,12 @@ func NewRepo(ac *config.AppConfig, db *driver.DB) *Repository {
 	}
 }
 
+// NewHandlers creates new handlers
 func NewHandlers(r *Repository) {
 	Repo = r
 }
 
+// AllPartners renders all partners from the DB as a JSON
 func (m *Repository) AllPartners(w http.ResponseWriter, r *http.Request) {
 	partners, err := m.DB.AllPartners()
 	if err != nil {
@@ -51,6 +53,7 @@ func (m *Repository) AllPartners(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
+// AllPartners renders a specific partner from the DB as a JSON
 func (m *Repository) SpecificPartner(w http.ResponseWriter, r *http.Request) {
 	keys, ok := r.URL.Query()["id"]
 
@@ -82,6 +85,7 @@ func (m *Repository) SpecificPartner(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
+// AllPartners renders a all partner close to a given user as a JSON
 func (m *Repository) ClosestPartner(w http.ResponseWriter, r *http.Request) {
 	keys := r.URL.Query()
 
