@@ -16,8 +16,9 @@ func NewHelpers(a *config.AppConfig) {
 	ac = a
 }
 
-func ClientError(w http.ResponseWriter, status int) {
+func ClientError(w http.ResponseWriter, status int, msg string) {
 	ac.InfoLog.Println("Client error with status of", status)
+	ac.InfoLog.Println("Error", msg)
 	http.Error(w, http.StatusText(status), status)
 }
 

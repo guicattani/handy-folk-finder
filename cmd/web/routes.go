@@ -15,7 +15,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(middleware.Recoverer)
 	mux.Use(NoSurf)
 
-	mux.Get("/", handlers.Repo.Home)
+	mux.Get("/", handlers.Repo.AllPartners)
+	mux.Get("/partner", handlers.Repo.SpecificPartner)
 
 	return mux
 }
