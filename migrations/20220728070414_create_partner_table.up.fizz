@@ -1,12 +1,13 @@
-create_table("partner") {
+create_table("partners") {
   t.Column("id", "integer", {primary: true})
-  t.Column("first_name", "string", {"default": ""})
-  t.Column("last_name", "string", {"default": ""})
-  t.Column("email", "string", {})
-  t.Column("rating", "integer")
-  t.Column("address_lat", "integer")
-  t.Column("address_lon", "integer")
+  t.Column("first_name", "string", {"default": "", "null": true})
+  t.Column("last_name", "string", {"default": "", "null": true})
   t.Column("operating_radius", "integer")
+  t.Column("experience", "[]string")
 }
 
-add_index("partner", "email", {"unique": true})
+sql("ALTER TABLE partners ADD COLUMN rating smallint CHECK (rating BETWEEN 0 AND 10)")
+sql("ALTER TABLE partners ADD COLUMN address_lat float CHECK (address_lat BETWEEN 0.0 AND 359.999)")
+sql("ALTER TABLE partners ADD COLUMN address_lon float CHECK (address_lon BETWEEN 0.0 AND 359.999)")
+sql("ALTER TABLE partners ADD COLUMN email varchar CHECK (email ~* '^[A-Za-z0-9._+%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$')")
+add_index("partners", "email", {"unique": true})

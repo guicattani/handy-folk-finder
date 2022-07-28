@@ -1,2 +1,2 @@
-drop_index("users", "users_email_idx")
-drop_table("reservations")
+drop_index("customers", "customers_email_idx")
+drop_table("customers")

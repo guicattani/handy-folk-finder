@@ -1,4 +1,4 @@
-create_table("customer") {
+create_table("customers") {
   t.Column("id", "integer", {primary: true})
   t.Column("first_name", "string", {"default": ""})
   t.Column("last_name", "string", {"default": ""})
@@ -6,4 +6,4 @@ create_table("customer") {
   t.Column("password", "string", {"size": 60})
 }
 
-add_index("customer", "email", {"unique": true})
+add_index("customers", "email", {"unique": true})
