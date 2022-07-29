@@ -11,6 +11,7 @@ type postgresDBRepo struct {
 	DB  *pgxpool.Pool
 }
 
+// Creates Postgres struct as a DB repo
 func NewPostgresRepo(conn *pgxpool.Pool, a *config.AppConfig) repository.DatabaseRepo {
 	return &postgresDBRepo{
 		App: a,
